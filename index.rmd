@@ -7,7 +7,7 @@ output:
   html_document:
     toc: true
     toc_depth: 3
-    code_folding: hide
+    code_folding: show
     number_sections: TRUE
 ---
 
@@ -15,7 +15,35 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# About
+
+This is a short overview about the current options of obtaining the bee observer data.
+
 ## Links
 
-[Schedule](https://docs.google.com/document/d/1CxwaMsYHWoPDdNm3H8gsfFQe_KHA4v7BMd2KCZ7r3Z0/edit)
+[Schedule of the Meeting](https://docs.google.com/document/d/1CxwaMsYHWoPDdNm3H8gsfFQe_KHA4v7BMd2KCZ7r3Z0/edit)
+
+[Hiverize](https://hiverize.org/) (information about the bee observer project)
+
+[Bob App](https://bee-observer.org/) (app used by bee keepers)
+
+[Hiveeyes](https://hiveeyes.org/) (platform for advanced questions)
+
+# Influx - DB
+
+We wrote a function to read sensory data directly from R. If you are interested in details, you can look at the source code here. No worries, you don't actually need to understand it in order to use it.
+```{r, code = readLines("influx.r")}
+```
+Here are two examples on how to use the function:
+```{r eval=F}
+source("influx.r")
+
+df <- influx.read("select * from sensors where \"key\" = 'Q05rcH1lquY8YrYN' and time >= now() -1h", "user", "password")
+head(df)
+
+df <- influx.read("select * from sensors where time >= now() -1h", "user", "password")
+head(df)
+```
+
+
 

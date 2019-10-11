@@ -182,7 +182,7 @@ $(document).ready(function () {
 </style>
 <script>
 $(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
+  window.initializeCodeFolding("show" === "show");
 });
 </script>
 
@@ -211,13 +211,79 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#links"><span class="toc-section-number">0.1</span> Links</a></li>
+<li><a href="#about"><span class="toc-section-number">1</span> About</a><ul>
+<li><a href="#links"><span class="toc-section-number">1.1</span> Links</a></li>
+</ul></li>
+<li><a href="#influx---db"><span class="toc-section-number">2</span> Influx - DB</a></li>
 </ul>
 </div>
 
+<div id="about" class="section level1">
+<h1><span class="header-section-number">1</span> About</h1>
+<p>This is a short overview about the current options of obtaining the bee observer data.</p>
 <div id="links" class="section level2">
-<h2><span class="header-section-number">0.1</span> Links</h2>
-<p><a href="https://docs.google.com/document/d/1CxwaMsYHWoPDdNm3H8gsfFQe_KHA4v7BMd2KCZ7r3Z0/edit">Schedule</a></p>
+<h2><span class="header-section-number">1.1</span> Links</h2>
+<p><a href="https://docs.google.com/document/d/1CxwaMsYHWoPDdNm3H8gsfFQe_KHA4v7BMd2KCZ7r3Z0/edit">Schedule of the Meeting</a></p>
+<p><a href="https://hiverize.org/">Hiverize</a> (information about the bee observer project)</p>
+<p><a href="https://bee-observer.org/">Bob App</a> (app used by bee keepers)</p>
+<p><a href="https://hiveeyes.org/">Hiveeyes</a> (platform for advanced questions)</p>
+</div>
+</div>
+<div id="influx---db" class="section level1">
+<h1><span class="header-section-number">2</span> Influx - DB</h1>
+<p>We wrote a function to read sensory data directly from R. If you are interested in details, you can look at the source code here. No worries, you don’t actually need to understand it in order to use it.</p>
+<pre class="r"><code>library(httr)
+
+influx.read &lt;- function(query, user, password){
+  # Purpose: Query data from the bee-observer sensor data base
+  #
+  # Parameters:
+  #     query: A query string. Refer to: https://docs.influxdata.com/influxdb/v1.7/query_language/data_exploration/
+  #           examples:
+  #                   &quot;select * from sensors where time &gt;= now() -1h&quot;
+  #                   &quot;select * from sensors where \&quot;key\&quot; = 'Q05rcH1lquY8YrYN' and time &gt;= now() -1h&quot;
+  #     user: the user of the influx db
+  #     password: influx db password
+  #
+  # Returns:
+  #     the data as data frame
+  
+  
+  
+  # Get raw data
+  result &lt;- GET(
+    &quot;http://134.102.219.159:8086/query?db=bee_data&quot;,
+    query=list(
+      q= query
+    ),
+    authenticate(user, password),
+    verbose()
+  )
+  
+  # parse raw data
+  content &lt;- content(result, as=&quot;parsed&quot;)
+  
+  # extract values
+  content.list &lt;- content$results[[1]]$series[[1]]$values
+  
+  # extract header
+  content.header &lt;- content$results[[1]]$series[[1]]$columns
+  
+  # convert to data frame
+  df &lt;- do.call(rbind, content.list)
+  df &lt;- as.data.frame(df)
+  names(df) &lt;- unlist(content.header)
+  
+  return(df)
+}</code></pre>
+<p>Here are two examples on how to use the function:</p>
+<pre class="r"><code>source(&quot;influx.r&quot;)
+
+df &lt;- influx.read(&quot;select * from sensors where \&quot;key\&quot; = 'Q05rcH1lquY8YrYN' and time &gt;= now() -1h&quot;, &quot;user&quot;, &quot;password&quot;)
+head(df)
+
+df &lt;- influx.read(&quot;select * from sensors where time &gt;= now() -1h&quot;, &quot;user&quot;, &quot;password&quot;)
+head(df)</code></pre>
 </div>
 
 
