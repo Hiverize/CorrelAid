@@ -1,0 +1,21 @@
+---
+title: "Correl Aid- Bee Observer"
+subtitle: Meeting, October
+author: "Bee Observer"
+date: "October 11, 2019"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    code_folding: hide
+    number_sections: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Links
+
+[Schedule](https://docs.google.com/document/d/1CxwaMsYHWoPDdNm3H8gsfFQe_KHA4v7BMd2KCZ7r3Z0/edit)
+
