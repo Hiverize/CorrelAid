@@ -9,6 +9,9 @@ output:
     toc_depth: 3
     code_folding: show
     number_sections: TRUE
+    theme: united # specify a theme
+    toc_float: true # generate a navigation bar
+
 ---
 
 ```{r setup, include=FALSE}
@@ -29,11 +32,51 @@ This is a short overview about the current options of obtaining the bee observer
 
 [Hiveeyes](https://hiveeyes.org/) (platform for advanced questions)
 
+# Data Sources
+
+![Influxdb is used for sensory data, mysql for observations made by bee keepers](grafics/data.png)
+
 # Influx - DB
 
+## covariates
+
+![Covariates](grafics/covariates.png)
+
+"time": timestamp of the measurement
+
+"bv": not used
+
+"h": humidity (%)
+
+"key": sensor key
+
+"name": not used
+
+"p": air pressure (hectopascal or mbar ?)
+
+"rssi": not used
+
+"snr": not used
+
+"t": temperature by "humidity sensor" (bme)
+
+"t_i_1" to "t_i_5": temperature inside
+
+"t_o": temperature outside
+
+"weight_kg": weight including hive, bees and honey
+
+
+## data access
+There used to be an own package for influxdb access called "influxdbr", but apparently it's not mantained anymore.
+
+However, we can use cURL (Client URL) and http.
+![https://en.wikipedia.org/wiki/CURL#/media/File:Curl-logo.svg](grafics/curl.png)
 We wrote a function to read sensory data directly from R. If you are interested in details, you can look at the source code here. No worries, you don't actually need to understand it in order to use it.
 ```{r, code = readLines("influx.r")}
 ```
+You might need to install the package httr first. You also need to install OpenSSL, but R will explain you how to do this.
+
 Here are two examples on how to use the function:
 ```{r eval=F}
 source("influx.r")
@@ -45,14 +88,29 @@ df <- influx.read("select * from sensors where time >= now() -1h", "user", "pass
 head(df)
 ```
 
+
 # Bob-App
+
+## data structure
+
+![BOB App](grafics/bobapp.png)
+The inspections list consists of categories. Categories can have subcategories.
+As you can see, there are different data types.
+
+
+## data access
 
 As an example, we provide a database dump. You can download it from seafile. Put it in the directory ``/data/``.
 
 ```{r}
 inspections <- read.csv("data/inspection_items.csv")
-head(inspections)
 ```
+
+```{r echo=F}
+library(knitr)
+kable(tail(inspections))
+```
+
 
 
 
