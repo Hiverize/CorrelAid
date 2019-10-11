@@ -45,5 +45,14 @@ df <- influx.read("select * from sensors where time >= now() -1h", "user", "pass
 head(df)
 ```
 
+# Bob-App
+
+As an example, we provide a database dump. You can download it from seafile. Put it in the directory ``/data/``.
+
+```{r}
+inspections <- read.csv("data/inspection_items.csv")
+head(inspections)
+```
+
 
 

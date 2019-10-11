@@ -215,6 +215,7 @@ $(document).ready(function () {
 <li><a href="#links"><span class="toc-section-number">1.1</span> Links</a></li>
 </ul></li>
 <li><a href="#influx---db"><span class="toc-section-number">2</span> Influx - DB</a></li>
+<li><a href="#bob-app"><span class="toc-section-number">3</span> Bob-App</a></li>
 </ul>
 </div>
 
@@ -284,6 +285,26 @@ head(df)
 
 df &lt;- influx.read(&quot;select * from sensors where time &gt;= now() -1h&quot;, &quot;user&quot;, &quot;password&quot;)
 head(df)</code></pre>
+</div>
+<div id="bob-app" class="section level1">
+<h1><span class="header-section-number">3</span> Bob-App</h1>
+<p>As an example, we provide a database dump. You can download it from seafile. Put it in the directory <code>/data/</code>.</p>
+<pre class="r"><code>inspections &lt;- read.csv(&quot;data/inspection_items.csv&quot;)
+head(inspections)</code></pre>
+<pre><code>##   inspection_id          created_at deleted_at category_id value
+## 1             2 2019-02-21 18:26:00       NULL         494     0
+## 2             2 2019-02-21 18:26:00       NULL         495     0
+## 3             2 2019-02-21 18:26:00       NULL         497     1
+## 4             2 2019-02-21 18:26:00       NULL         595     1
+## 5             2 2019-02-21 18:26:00       NULL         774     5
+## 6             2 2019-02-21 18:26:00       NULL         794     3
+##           translation hive_id  key
+## 1 Anzahl der Rähmchen       4 NULL
+## 2               Honig       4 NULL
+## 3              Pollen       4 NULL
+## 4          Behandlung       4 NULL
+## 5 Rähmchen mit Bienen       4 NULL
+## 6              Status       4 NULL</code></pre>
 </div>
 
 
